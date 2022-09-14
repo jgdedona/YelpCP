@@ -3,17 +3,9 @@ const wrapAsync = require('../utilities/wrapAsync');
 const Review = require('../models/review');
 const Campground = require('../models/campground');
 const { reviewSchema } = require('../schemas');
+const { validateReview } = require('../middleware');
 
 const router = express.Router({ mergeParams: true });
-
-function validateReview(req, res, next) {
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(e => e.message).join(',');
-        throw new CustomErr(msg, 400);
-    }
-    next();
-}
 
 router.post('/', validateReview, wrapAsync(async (req, res) => {
     const { id } = req.params;
