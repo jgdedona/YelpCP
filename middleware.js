@@ -36,6 +36,7 @@ module.exports.errorFlashes = async function (req, res, next) {
 
 module.exports.isLoggedIn = function (req, res, next) {
     if (!req.isAuthenticated()) {
+        req.session.redirectedFrom = req.originalUrl;
         req.flash('error', 'You must sign in to perform that action');
         return res.redirect('/login');
     }
