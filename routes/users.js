@@ -31,9 +31,10 @@ router.get('/login', (req, res) => {
     res.render('users/login');
 })
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login', keepSessionInfo: true }), (req, res) => {
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
     req.flash('success', "Welcome!");
-    const redirectUrl = req.session.redirectedFrom || '/campgrounds'
+    const redirectUrl = res.locals.redirectedFrom || '/campgrounds';
+    delete res.locals.redirectedFrom;
     res.redirect(redirectUrl);
 })
 

@@ -53,6 +53,12 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
+    if (req.session.redirectedFrom && req.originalUrl !== '/login') {
+        delete res.locals.redirectedFrom;
+        delete req.session.redirectedFrom;
+    } else if (req.session.redirectedFrom) {
+        res.locals.redirectedFrom = req.session.redirectedFrom;
+    }
     res.locals.currUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
