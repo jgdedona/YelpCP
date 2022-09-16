@@ -1,5 +1,7 @@
 const Campground = require('./models/campground');
+const Review = require('./models/review');
 const { campgroundSchema, reviewSchema } = require('./schemas');
+const CustomErr = require('./utilities/CustomErr');
 
 module.exports.validateCamp = function (req, res, next) {
     const { error } = campgroundSchema.validate(req.body);
@@ -39,6 +41,26 @@ module.exports.isLoggedIn = function (req, res, next) {
         req.session.redirectedFrom = req.originalUrl;
         req.flash('error', 'You must sign in to perform that action');
         return res.redirect('/login');
+    }
+    next();
+}
+
+module.exports.isAuthorizedCamp = async function (req, res, next) {
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    if (campground && !campground.author.equals(req.user._id)) {
+        req.flash('error', 'You are not authorized to perform that action');
+        return res.redirect(`/campgrounds/${id}`);
+    }
+    next();
+}
+
+module.exports.isAuthorizedReview = async function (req, res, next) {
+    const { id, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+    if (review && !review.author.equals(req.user._id)) {
+        req.flash('error', 'You are not authorized to perform that action');
+        return res.redirect(`/campgrounds/${id}`);
     }
     next();
 }

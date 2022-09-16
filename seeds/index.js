@@ -26,7 +26,8 @@ async function seedDB() {
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/483251',
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi illo distinctio ducimus optio nihil molestias quaerat corrupti vitae dolore unde, perspiciatis cumque nemo dolorum nulla laboriosam rem quasi ad facere.',
-            price: randPrice
+            price: randPrice,
+            author: '6321dac96613cfde7de2f760'
         });
         await camp.save();
     }
