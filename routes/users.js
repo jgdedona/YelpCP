@@ -2,51 +2,18 @@ const express = require('express');
 const wrapAsync = require('../utilities/wrapAsync');
 const passport = require('passport');
 const User = require('../models/user');
+const users = require('../controllers/users');
 
 const router = express.Router();
 
-router.get('/register', (req, res) => {
-    res.render('users/register');
-})
+router.get('/register', users.renderRegistrationForm);
 
-router.post('/register', wrapAsync(async (req, res, next) => {
-    try {
-        const { username, email, password } = req.body.user;
-        const user = await new User({ username, email })
-        const registeredUser = await User.register(user, password);
-        req.login(registeredUser, (err) => {
-            if (err) {
-                return next(err)
-            }
-            req.flash('success', `Welcome, ${registeredUser.username}!`);
-            res.redirect('/campgrounds');
-        })
-    } catch (e) {
-        req.flash('error', `${e.message}`);
-        res.redirect('/register');
-    }
-}));
+router.post('/register', wrapAsync(users.registerUser));
 
-router.get('/login', (req, res) => {
-    res.render('users/login');
-})
+router.get('/login', users.renderLoginForm);
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
-    req.flash('success', "Welcome!");
-    const redirectUrl = res.locals.redirectedFrom || '/campgrounds';
-    console.log(redirectUrl);
-    delete res.locals.redirectedFrom;
-    res.redirect(redirectUrl);
-})
+router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login);
 
-router.get('/logout', (req, res) => {
-    req.logout((err) => {
-        if (err) {
-            return next(err);
-        }
-        req.flash('success', 'Goodbye!');
-        res.redirect('/campgrounds');
-    });
-})
+router.get('/logout', users.logout);
 
 module.exports = router;
