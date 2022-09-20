@@ -9,7 +9,12 @@
             <div class="card mb-3">
                 <div class="row">
                     <div class="col-md-4">
-                        <img src="<%=campground.image%>" alt="campground image" class="img-fluid">
+                        <% if (campground.images.length) { %>
+                            <img src="<%=campground.images[0].url%>" alt="campground image" class="img-fluid">
+                            <% } else { %>
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930"
+                                    alt="no image found" class="img-fluid">
+                                <% } %>
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">

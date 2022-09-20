@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const session = require('express-session');
 const mongoose = require('mongoose');
@@ -85,6 +89,6 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err });
 });
 
-app.listen(3001, () => {
-    console.log('Listening on port 3001');
+app.listen(3002, () => {
+    console.log('Listening on port 3002');
 });
