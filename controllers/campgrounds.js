@@ -15,10 +15,14 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createCampground = async (req, res) => {
-    const geoData = await geocoder.forwardGeocode({
+    var geoData = await geocoder.forwardGeocode({
         query: req.body.campground.location,
         limit: 1
     }).send();
+    if (!geoData.body.features.length) {
+        req.flash('error', 'Invalid location');
+        return res.redirect('/campgrounds/new');
+    }
     const campground = new Campground({ ...req.body.campground });
     campground.images = req.files.map(file => ({ url: file.path, filename: file.filename }));
     campground.author = req.user._id;
@@ -45,9 +49,18 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.editCampground = async (req, res) => {
     const { id } = req.params;
+    var geoData = await geocoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1
+    }).send();
+    if (!geoData.body.features.length) {
+        req.flash('error', 'Invalid location');
+        return res.redirect(`/campgrounds/${id}`);
+    }
     const updatedCamp = await Campground.findByIdAndUpdate(id, { ...req.body.campground }, { new: true, runValidators: true });
     const images = req.files.map(file => ({ url: file.path, filename: file.filename }));
     updatedCamp.images.push(...images);
+    updatedCamp.geometry = geoData.body.features[0].geometry;
     await updatedCamp.save();
     if (req.body.deleteImages) {
         for (let filename of req.body.deleteImages) {
