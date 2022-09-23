@@ -10,11 +10,15 @@ const { storage } = require('../cloudinary/index');
 const upload = multer({ 
     storage: storage,
     fileFilter: function (req, file, callback) {
-        const ext = path.extname(file.originalname);
+        const ext = path.extname(file.originalname).toLowerCase();
         if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
             return callback(new CustomErr('Only images are allowed!', 415));
         }
         callback(null, true);
+    },
+    limits: {
+        fileSize: 10000000,
+        files: 3
     } 
 })
 
