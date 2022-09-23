@@ -1,10 +1,22 @@
+const CustomErr = require('../utilities/CustomErr');
+const path = require('path');
+
 const express = require("express");
 const wrapAsync = require('../utilities/wrapAsync');
 const campgrounds = require('../controllers/campgrounds');
 const { isLoggedIn, validateCamp, errorFlashes, isAuthorizedCamp } = require('../middleware');
 const multer = require('multer');
 const { storage } = require('../cloudinary/index');
-const upload = multer({ storage: storage })
+const upload = multer({ 
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        const ext = path.extname(file.originalname);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+            return callback(new CustomErr('Only images are allowed!', 415));
+        }
+        callback(null, true);
+    } 
+})
 
 const router = express.Router();
 

@@ -25,7 +25,6 @@ module.exports.registerUser = async (req, res, next) => {
 module.exports.login = (req, res) => {
     req.flash('success', "Welcome!");
     const redirectUrl = res.locals.redirectedFrom || '/campgrounds';
-    console.log(redirectUrl);
     delete res.locals.redirectedFrom;
     res.redirect(redirectUrl);
 }

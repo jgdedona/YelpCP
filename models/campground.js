@@ -13,6 +13,10 @@ imageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200,h_200');
 });
 
+imageSchema.virtual('crop').get(function () {
+    return this.url.replace('/upload', '/upload/c_fill,g_face,h_280,w_420');
+});
+
 const campgroundSchema = new Schema({
     title: {
         type: String
