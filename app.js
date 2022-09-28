@@ -22,8 +22,7 @@ const reviewRoutes = require('./routes/reviews');
 const User = require('./models/user');
 
 const app = express();
-const dbUrl = process.env.DB_URL;
-// const dbUrl = 'mongodb://localhost:27017/yelp-cp';
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-cp';
 
 mongoose.connect(dbUrl)
     .then(() => {
@@ -156,6 +155,8 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err });
 });
 
-app.listen(3002, () => {
-    console.log('Listening on port 3002');
+const port = process.env.PORT || 3000
+
+app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
 });
