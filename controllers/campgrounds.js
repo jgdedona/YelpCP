@@ -10,7 +10,6 @@ module.exports.index = async (req, res) => {
     if ('query' in req.query && 'type' in req.query) {
         const { query, type } = req.query;
         campgrounds = await Campground.find({[type]: new RegExp('.*' + query + '.*', 'i')});
-        console.log(campgrounds);
     } else {
         campgrounds = await Campground.find({});
 
