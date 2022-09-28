@@ -4,27 +4,32 @@
     <div class="container">
         <h1 class="text-center mt-2">All Campgrounds</h1>
         <div>
-            <div class="row mb-3">
-                <div class="col-lg-6 offset-lg-3">
-                    <div class="row">
-                        <div class="input-group mb-2">
-                            <div class="col-8">
-                                <input type="text" class="form-control" aria-label="Search feature with dropdown select" placeholder="Search by campground name or location" id="search">
-                            </div>
-                            <div class="col-4">
-                                <select class="form-select" aria-label="Dropdown select for search feature" id="options">
-                                    <option value="title">Name</option>
-                                    <option value="location">Location</option>
-                                </select>
+            <form action="/campgrounds">
+                <div class="row mb-3">
+                    <div class="col-lg-6 offset-lg-3">
+                        <div class="row">
+                            <div class="input-group mb-2">
+                                <div class="col-8">
+                                    <input type="text" class="form-control" aria-label="Search feature with dropdown select" placeholder="Search by campground name or location" id="search" name="query">
+                                </div>
+                                <div class="col-4">
+                                    <select class="form-select" aria-label="Dropdown select for search feature" id="options" name="type">
+                                        <option value="title">Name</option>
+                                        <option value="location">Location</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>       
+                    <div class="text-center col-lg-1">
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                </div>  
+            </form>     
         </div>
             <div id="campgrounds">
             <% for (let campground of campgrounds) { %>
-                <div class="card mb-3" id="<%=campground._id%>">
+                <div class="card mb-3 d-none" id="<%=campground._id%>">
                     <div class="row">
                         <div class="col-md-4">
                             <% if (campground.images.length) { %>
@@ -55,6 +60,9 @@
                     </div>
                 </div>
                 <% } %>
+                <div class="text-center mb-3">
+                    <button class="btn btn-primary" id="more">Load More Campgrounds</button>
+                </div>
             </div>
         </div>
             <script>
@@ -62,4 +70,4 @@
                 const campgrounds = <%-JSON.stringify(campgrounds)%>
             </script>
             <script src="/js/clusterMap.js"></script>
-            <script src="/js/search.js"></script>
+            <script src="/js/infiniteScroll.js"></script>
