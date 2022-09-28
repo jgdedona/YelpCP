@@ -12,7 +12,6 @@ module.exports.index = async (req, res) => {
         campgrounds = await Campground.find({[type]: new RegExp('.*' + query + '.*', 'i')});
     } else {
         campgrounds = await Campground.find({});
-
     }
     res.render('campgrounds/index', { campgrounds });
 }

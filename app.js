@@ -14,6 +14,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoStore = require('connect-mongo');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
@@ -21,8 +22,10 @@ const reviewRoutes = require('./routes/reviews');
 const User = require('./models/user');
 
 const app = express();
+const dbUrl = process.env.DB_URL;
+// const dbUrl = 'mongodb://localhost:27017/yelp-cp';
 
-mongoose.connect('mongodb://localhost:27017/yelp-cp')
+mongoose.connect(dbUrl)
     .then(() => {
         console.log("Connection Opened!");
     })
@@ -86,9 +89,22 @@ app.use(
     })
 );
 
+const secret = process.env.SECRET || 'fixthislater'
+
+const store = new MongoStore({
+    mongoUrl: dbUrl,
+    secret,
+    touchAfter: 24 * 3600
+});
+
+store.on('error', function (e) {
+    console.log('Session store error', e);
+})
+
 const sessionConfig = {
+    store,
     name: 'sess',
-    secret: 'fixthislater',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
