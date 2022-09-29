@@ -40,3 +40,15 @@ module.exports.reviewSchema = Joi.object({
         body: Joi.string().required().escapeHTML()
     }).required()
 });
+
+module.exports.userSchema = Joi.object({
+    user: Joi.object({
+        username: Joi.string().required().escapeHTML(),
+        email: Joi.string().required().escapeHTML(),
+        password: Joi.string().required().escapeHTML()
+            .pattern(new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,30}$'))
+            .message('Password must be between 8 and 30 characters and ' +
+            'contain at least one lowercase character, one uppercase character, ' +
+            'one numerical character, and one special character')
+    })
+});

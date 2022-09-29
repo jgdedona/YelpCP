@@ -1,6 +1,6 @@
 const Campground = require('./models/campground');
 const Review = require('./models/review');
-const { campgroundSchema, reviewSchema } = require('./schemas');
+const { campgroundSchema, reviewSchema, userSchema } = require('./schemas');
 const CustomErr = require('./utilities/CustomErr');
 
 module.exports.validateCamp = function (req, res, next) {
@@ -17,6 +17,17 @@ module.exports.validateReview = function (req, res, next) {
     if (error) {
         const msg = error.details.map(e => e.message).join(',');
         throw new CustomErr(msg, 400);
+    }
+    next();
+}
+
+module.exports.validateUser = function (req, res, next) {
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(e => e.message).join(',');
+        // throw new CustomErr(msg, 400);
+        req.flash('error', `${msg}`);
+        return res.redirect('/register');
     }
     next();
 }
