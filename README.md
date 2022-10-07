@@ -2,7 +2,7 @@
 
 ## Purpose
 
-YelpCP is a web application that allows users to share, browse, and review camp sites around the world. Authenticated users can review campgrounds, create new campgrounds, and modify/delete existing campgrounds that they own.
+YelpCP is a web application that allows users to share, browse, and review campsites around the world. Authenticated users can review campgrounds, create new campgrounds, and modify/delete existing campgrounds that they own.
 
 ## Features
 - Account management
